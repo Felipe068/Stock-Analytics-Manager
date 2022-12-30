@@ -1,0 +1,308 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package telas;
+
+import conexao.ProdutosDAO;
+import java.awt.Color;
+import java.awt.Toolkit;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import negocio.Produto;
+
+/**
+ *
+ * @author felip
+ */
+public class Tela_Analise extends javax.swing.JFrame {
+
+    /**
+     * Creates new form Tela_Analise
+     */
+    public Tela_Analise() throws SQLException {
+        initComponents();
+        setIcon();
+
+        fat_total.setToolTipText("Faturamento ao vender todo estoque");
+        despesas_total.setToolTipText("Despesas ao vender todo estoque");
+        lucro_total.setToolTipText("Lucro ao vender todo estoque");
+        vendas_total.setToolTipText("Previsão de vendas mensais");
+        prod_total.setToolTipText("Total de produtos cadastrados");
+        est_total.setToolTipText("Total de unidades em estoque");
+        mais_vendido_LB.setToolTipText("Produto com maior número de vendas mensais");
+        maior_est_LB.setToolTipText("Produto com maior número de unidades em estoque");
+        
+        preco_med.setToolTipText("Preço médio de cada produto");
+        desp_med.setToolTipText("Média de custo de cada produto");
+        lucro_med.setToolTipText("Lucro médio de cada produto");
+        est_med.setToolTipText("Média de unidades em estoque por produto");
+        vm_med.setToolTipText("Média de vendas mensais por produto");
+        
+        ProdutosDAO prod = new ProdutosDAO();
+
+        List<Produto> listaDeProdutos;
+        listaDeProdutos = new ArrayList<>();
+
+        listaDeProdutos = prod.obterListaDeCarros();
+
+        int prod_totais = 0;
+        double faturamento_tot = 0;
+        double despesas_tot = 0;
+        double lucro_tot = 0;
+        int estoque_tot = 0;
+        int vendas_tot = 0;
+        int fim_est = 0;
+
+        int int_mais_vendido = 0;
+        String st_maisVendido = "";
+
+        int int_maior_est = 0;
+        String st_maiorEst = "";
+        
+        double preco_medio = 0;
+        double despesas_medio = 0;
+        double lucro_medio = 0;
+
+        for (Produto produtos : listaDeProdutos) { // Iterator: Para cada carro na lista de carros...
+            prod_totais += 1;
+            faturamento_tot += produtos.getValor() * produtos.getEstoque();
+            despesas_tot += produtos.getCusto() * produtos.getEstoque();
+            lucro_tot += produtos.getLucro() * produtos.getEstoque();
+            estoque_tot += produtos.getEstoque();
+            vendas_tot += produtos.getVendamedia();
+
+            if (produtos.getVendamedia() >= int_mais_vendido) {
+                int_mais_vendido = produtos.getVendamedia();
+                st_maisVendido = produtos.getProduto();
+            }
+
+            if (produtos.getEstoque() >= int_maior_est) {
+                int_maior_est = produtos.getEstoque();
+                st_maiorEst = produtos.getProduto();
+            }
+            
+            preco_medio += produtos.getValor();
+            despesas_medio += produtos.getCusto();
+            lucro_medio += produtos.getLucro();
+
+
+        }
+
+        prod_total.setText(Integer.toString(prod_totais));
+        fat_total.setText("R$ " + Double.toString(faturamento_tot));
+        despesas_total.setText("R$ " + Double.toString(despesas_tot));
+        lucro_total.setText("R$ " + Double.toString(lucro_tot));
+        est_total.setText(Integer.toString(estoque_tot));
+        vendas_total.setText(Integer.toString(vendas_tot));
+
+        fim_est = estoque_tot / vendas_tot;
+
+        if (fim_est < 1) {
+            fim_est_lb.setText("Renovação Imediata");
+            fim_est_lb.setForeground(Color.red);
+            fim_est_lb.setToolTipText("O estoque não durará o mês inteiro, deve ser renovado");
+        } else {
+            fim_est_lb.setText(Integer.toString(fim_est) + " meses");
+            fim_est_lb.setForeground(Color.white);
+            fim_est_lb.setToolTipText("Previsão do fim do estoque atual");
+        }
+        
+
+        mais_vendido_LB.setText(st_maisVendido);
+        maior_est_LB.setText(st_maiorEst);
+        
+        preco_med.setText("R$ "+ Double.toString(preco_medio / prod_totais));
+        desp_med.setText("R$ "+ Double.toString(despesas_medio / prod_totais));
+        lucro_med.setText("R$ "+ Double.toString(lucro_medio / prod_totais));
+        est_med.setText(Integer.toString(estoque_tot/prod_totais));
+        vm_med.setText(Integer.toString(vendas_tot/prod_totais));
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        prod_total = new javax.swing.JLabel();
+        fat_total = new javax.swing.JLabel();
+        despesas_total = new javax.swing.JLabel();
+        lucro_total = new javax.swing.JLabel();
+        est_total = new javax.swing.JLabel();
+        vendas_total = new javax.swing.JLabel();
+        mais_vendido_LB = new javax.swing.JLabel();
+        maior_est_LB = new javax.swing.JLabel();
+        preco_med = new javax.swing.JLabel();
+        desp_med = new javax.swing.JLabel();
+        lucro_med = new javax.swing.JLabel();
+        fim_est_lb = new javax.swing.JLabel();
+        est_med = new javax.swing.JLabel();
+        vm_med = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Análise de Dados");
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        prod_total.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        prod_total.setForeground(new java.awt.Color(255, 255, 255));
+        prod_total.setText("Total");
+        prod_total.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(prod_total, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 28, -1, -1));
+
+        fat_total.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        fat_total.setForeground(new java.awt.Color(255, 255, 255));
+        fat_total.setText("Total");
+        fat_total.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(fat_total, new org.netbeans.lib.awtextra.AbsoluteConstraints(344, 275, -1, -1));
+
+        despesas_total.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        despesas_total.setForeground(new java.awt.Color(255, 255, 255));
+        despesas_total.setText("jLabel4");
+        despesas_total.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(despesas_total, new org.netbeans.lib.awtextra.AbsoluteConstraints(285, 357, -1, -1));
+
+        lucro_total.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lucro_total.setForeground(new java.awt.Color(255, 255, 255));
+        lucro_total.setText("jLabel5");
+        lucro_total.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(lucro_total, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 430, -1, -1));
+
+        est_total.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        est_total.setForeground(new java.awt.Color(255, 255, 255));
+        est_total.setText("jLabel6");
+        est_total.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(est_total, new org.netbeans.lib.awtextra.AbsoluteConstraints(344, 95, -1, -1));
+
+        vendas_total.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        vendas_total.setForeground(new java.awt.Color(255, 255, 255));
+        vendas_total.setText("jLabel7");
+        vendas_total.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(vendas_total, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 500, -1, -1));
+
+        mais_vendido_LB.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        mais_vendido_LB.setForeground(new java.awt.Color(255, 255, 255));
+        mais_vendido_LB.setText("jLabel8");
+        mais_vendido_LB.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(mais_vendido_LB, new org.netbeans.lib.awtextra.AbsoluteConstraints(870, 29, -1, -1));
+
+        maior_est_LB.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        maior_est_LB.setForeground(new java.awt.Color(255, 255, 255));
+        maior_est_LB.setText("jLabel9");
+        maior_est_LB.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(maior_est_LB, new org.netbeans.lib.awtextra.AbsoluteConstraints(880, 94, -1, -1));
+
+        preco_med.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        preco_med.setForeground(new java.awt.Color(255, 255, 255));
+        preco_med.setText("jLabel10");
+        preco_med.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(preco_med, new org.netbeans.lib.awtextra.AbsoluteConstraints(806, 268, -1, -1));
+
+        desp_med.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        desp_med.setForeground(new java.awt.Color(255, 255, 255));
+        desp_med.setText("jLabel11");
+        desp_med.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(desp_med, new org.netbeans.lib.awtextra.AbsoluteConstraints(860, 342, -1, -1));
+
+        lucro_med.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lucro_med.setForeground(new java.awt.Color(255, 255, 255));
+        lucro_med.setText("jLabel12");
+        lucro_med.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(lucro_med, new org.netbeans.lib.awtextra.AbsoluteConstraints(810, 425, -1, -1));
+
+        fim_est_lb.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        fim_est_lb.setForeground(new java.awt.Color(255, 255, 255));
+        fim_est_lb.setText("jLabel1");
+        fim_est_lb.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(fim_est_lb, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 572, -1, -1));
+
+        est_med.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        est_med.setForeground(new java.awt.Color(255, 255, 255));
+        est_med.setText("jLabel1");
+        est_med.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(est_med, new org.netbeans.lib.awtextra.AbsoluteConstraints(1030, 505, -1, -1));
+
+        vm_med.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        vm_med.setForeground(new java.awt.Color(255, 255, 255));
+        vm_med.setText("jLabel3");
+        vm_med.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        getContentPane().add(vm_med, new org.netbeans.lib.awtextra.AbsoluteConstraints(1000, 575, -1, -1));
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagens/Analise.png"))); // NOI18N
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1150, 640));
+
+        pack();
+        setLocationRelativeTo(null);
+    }// </editor-fold>//GEN-END:initComponents
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Tela_Analise.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Tela_Analise.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Tela_Analise.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Tela_Analise.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                try {
+                    new Tela_Analise().setVisible(true);
+                } catch (SQLException ex) {
+                    Logger.getLogger(Tela_Analise.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        });
+    }
+
+    private void setIcon() {
+        setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("icon.png")));
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel desp_med;
+    private javax.swing.JLabel despesas_total;
+    private javax.swing.JLabel est_med;
+    private javax.swing.JLabel est_total;
+    private javax.swing.JLabel fat_total;
+    private javax.swing.JLabel fim_est_lb;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel lucro_med;
+    private javax.swing.JLabel lucro_total;
+    private javax.swing.JLabel maior_est_LB;
+    private javax.swing.JLabel mais_vendido_LB;
+    private javax.swing.JLabel preco_med;
+    private javax.swing.JLabel prod_total;
+    private javax.swing.JLabel vendas_total;
+    private javax.swing.JLabel vm_med;
+    // End of variables declaration//GEN-END:variables
+}
